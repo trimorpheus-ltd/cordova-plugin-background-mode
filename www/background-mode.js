@@ -419,6 +419,7 @@ exports._defaults = {
     hidden:             true,
     color:              undefined,
     icon:               'icon',
+	largeIcon:          undefined,
     channelName:        'cordova-plugin-background-mode',
     channelDescription: 'cordova-plugin-background-moden notification',
     allowClose:         false,

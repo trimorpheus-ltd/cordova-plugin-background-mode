@@ -27,6 +27,7 @@ import android.app.*;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Icon;
 import android.os.Binder;
 import android.os.Build;
@@ -189,6 +190,7 @@ public class ForegroundService extends Service {
         String text     = settings.optString("text", NOTIFICATION_TEXT);
         boolean bigText = settings.optBoolean("bigText", false);
         String subText = settings.optString("subText", "");
+        String largeIcon = settings.optString("largeIcon", null);
 
         Context context = getApplicationContext();
         String pkgName  = context.getPackageName();
@@ -204,6 +206,10 @@ public class ForegroundService extends Service {
 
         if (!subText.equals("")) {
             notification.setSubText(subText);
+        }
+
+        if (largeIcon != null) {
+            notification.setLargeIcon(BitmapFactory.decodeResource(getResources(), getIconResId(largeIcon)));
         }
 
         if (settings.optBoolean("allowClose", false)) {
