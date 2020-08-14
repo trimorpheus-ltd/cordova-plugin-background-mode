@@ -164,6 +164,14 @@ exports.disableWebViewOptimizations = function()
     }
 };
 
+exports.enableWebViewOptimizations = function()
+{
+    if (this._isAndroid)
+    {
+        cordova.exec(null, null, 'BackgroundModeExt', 'enableWebview', []);
+    }
+};
+
 /**
  * Disables battery optimazation mode for the app.
  *

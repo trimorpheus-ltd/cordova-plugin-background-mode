@@ -101,6 +101,9 @@ public class BackgroundModeExt extends CordovaPlugin {
             case "webview":
                 disableWebViewOptimizations();
                 break;
+            case "enableWebview":
+                enableWebViewOptimizations();
+                break;
             case "appstart":
                 openAppStart(args.opt(0));
                 break;
@@ -185,6 +188,31 @@ public class BackgroundModeExt extends CordovaPlugin {
                                  .invoke(view);
                         } catch (Exception e){
                             view.dispatchWindowVisibilityChanged(View.VISIBLE);
+                        }
+                    });
+                } catch (InterruptedException e) {
+                    // do nothing
+                }
+            }
+        };
+
+        thread.start();
+    }
+
+    private void enableWebViewOptimizations() {
+        Thread thread = new Thread(){
+            public void run() {
+                try {
+                    Thread.sleep(1000);
+                    getApp().runOnUiThread(() -> {
+                        View view = webView.getView();
+
+                        try {
+                            Class.forName("org.crosswalk.engine.XWalkCordovaView")
+                                 .getMethod("onHide")
+                                 .invoke(view);
+                        } catch (Exception e){
+                            view.dispatchWindowVisibilityChanged(View.GONE);
                         }
                     });
                 } catch (InterruptedException e) {
