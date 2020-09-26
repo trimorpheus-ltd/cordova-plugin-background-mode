@@ -1,4 +1,6 @@
-This is a fork of [a great plugin by katzer](https://github.com/katzer/cordova-plugin-background-mode/). It aims to keep up-to-date with Android changes while also providing more features.
+This is a fork of [a fork](https://bitbucket.org/TheBosZ/cordova-plugin-run-in-background) of [a great plugin by katzer](https://github.com/katzer/cordova-plugin-background-mode/). It aims to keep up-to-date with Android changes while also providing more features.
+
+This fork has been created in order to make the Android source code compatible with Java 6.
 
 Cordova Background Plugin [![npm version](https://badge.fury.io/js/cordova-plugin-background-mode.svg)](http://badge.fury.io/js/cordova-plugin-background-mode) [![Build Status](https://travis-ci.org/katzer/cordova-plugin-background-mode.svg?branch=master)](https://travis-ci.org/katzer/cordova-plugin-background-mode) [![codebeat badge](https://codebeat.co/badges/49709283-b313-4ced-8630-f520baaec7b5)](https://codebeat.co/projects/github-com-katzer-cordova-plugin-background-mode)
 =========================
