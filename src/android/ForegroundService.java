@@ -215,7 +215,7 @@ public class ForegroundService extends Service {
         if (settings.optBoolean("allowClose", false)) {
 
             final Intent clostAppIntent = new Intent("com.backgroundmode.close" + pkgName);
-            final PendingIntent closeIntent = PendingIntent.getBroadcast(context, 1337, clostAppIntent, 0);
+            final PendingIntent closeIntent = PendingIntent.getBroadcast(context, 1337, clostAppIntent, PendingIntent.FLAG_IMMUTABLE);
             final String closeIconName = settings.optString("closeIcon", "power");
             NotificationCompat.Action.Builder closeAction = new NotificationCompat.Action.Builder(getIconResId(closeIconName), settings.optString("closeTitle", "Close"), closeIntent);
             notification.addAction(closeAction.build());
@@ -240,7 +240,7 @@ public class ForegroundService extends Service {
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             PendingIntent contentIntent = PendingIntent.getActivity(
                     context, NOTIFICATION_ID, intent,
-                    PendingIntent.FLAG_UPDATE_CURRENT);
+                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
 
             notification.setContentIntent(contentIntent);
