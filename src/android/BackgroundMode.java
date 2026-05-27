@@ -23,6 +23,7 @@ package de.appplant.cordova.plugin.background;
 
 import android.app.Activity;
 import android.content.*;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 
@@ -78,13 +79,19 @@ public class BackgroundMode extends CordovaPlugin {
         }
     };
 
+    // Define constants declared in SDK 33.
+    private static final int Build_VERSION_CODES_TIRAMISU = 33;
+    private static final int Context_RECEIVER_NOT_EXPORTED = 4;
+
     @Override
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
         super.initialize(cordova, webView);
         IntentFilter filter = new IntentFilter();
         filter.addAction("com.backgroundmode.close" + cordova.getActivity().getApplicationContext().getPackageName());
-        cordova.getActivity().registerReceiver(receiver, filter);
-
+        if (Build.VERSION.SDK_INT >= Build_VERSION_CODES_TIRAMISU)
+            cordova.getActivity().registerReceiver(receiver, filter, Context_RECEIVER_NOT_EXPORTED);
+        else
+            cordova.getActivity().registerReceiver(receiver, filter);
     }
 
     private BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -140,7 +147,6 @@ public class BackgroundMode extends CordovaPlugin {
     {
         try {
             inBackground = true;
-            startService();
         } finally {
             clearKeyguardFlags(cordova.getActivity());
         }
@@ -183,7 +189,7 @@ public class BackgroundMode extends CordovaPlugin {
     {
         isDisabled = false;
 
-        if (inBackground) {
+        if (!isBind) {
             startService();
         }
     }
@@ -257,7 +263,10 @@ public class BackgroundMode extends CordovaPlugin {
         try {
             context.bindService(intent, connection, BIND_AUTO_CREATE);
             fireEvent(Event.ACTIVATE, null);
-            context.startService(intent);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                context.startForegroundService(intent);
+            else
+                context.startService(intent);
         } catch (Exception e) {
             fireEvent(Event.FAILURE, String.format("'%s'", e.getMessage()));
         }
