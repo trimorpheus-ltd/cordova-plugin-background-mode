@@ -87,17 +87,6 @@ public class ForegroundService extends Service {
     }
 
     /**
-     * Put the service in a foreground state to prevent app from being killed
-     * by the OS.
-     */
-    @Override
-    public void onCreate()
-    {
-        super.onCreate();
-        keepAwake();
-    }
-
-    /**
      * No need to run headless on destroy.
      */
     @Override
@@ -112,6 +101,7 @@ public class ForegroundService extends Service {
      */
     @Override
     public int onStartCommand (Intent intent, int flags, int startId) {
+        keepAwake();
         return START_STICKY;
     }
 
