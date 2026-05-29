@@ -21,11 +21,14 @@
 
 package de.appplant.cordova.plugin.background;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.*;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
@@ -82,6 +85,7 @@ public class BackgroundMode extends CordovaPlugin {
     // Define constants declared in SDK 33.
     private static final int Build_VERSION_CODES_TIRAMISU = 33;
     private static final int Context_RECEIVER_NOT_EXPORTED = 4;
+    private static final String Manifest_permission_POST_NOTIFICATIONS = "android.permission.POST_NOTIFICATIONS";
 
     @Override
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
@@ -181,6 +185,21 @@ public class BackgroundMode extends CordovaPlugin {
         android.os.Process.killProcess(android.os.Process.myPid());
     }
 
+    @Override
+    public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults)
+    {
+        Log.d(getLogContext(), "onRequestPermissionResult: permissions=" + java.util.Arrays.toString(permissions) + "; grantResults=" + java.util.Arrays.toString(grantResults));
+        if (Manifest_permission_POST_NOTIFICATIONS.equals(permissions[0])) {
+            if (grantResults[0] == PackageManager.PERMISSION_DENIED)
+                Log.w(getLogContext(), "User refused to grant permission to Post Notifications. The Foreground Service should still enable Audio Recording to work in the background but there will be no notification visible to the user");
+            startServiceImpl();
+        }
+    }
+
+    private String getLogContext() {
+        return getClass().getSimpleName();
+    }
+
     /**
      * Enable the background mode.
      */
@@ -252,11 +271,18 @@ public class BackgroundMode extends CordovaPlugin {
      */
     private void startService()
     {
-        Activity context = cordova.getActivity();
-
         if (isDisabled || isBind)
             return;
 
+        if (Build.VERSION.SDK_INT < Build_VERSION_CODES_TIRAMISU || cordova.hasPermission(Manifest_permission_POST_NOTIFICATIONS))
+            startServiceImpl();
+        else
+            cordova.requestPermission(this, 0, Manifest_permission_POST_NOTIFICATIONS);
+    }
+
+    private void startServiceImpl()
+    {
+        Activity context = cordova.getActivity();
         Intent intent = new Intent(context, ForegroundService.class);
 
         try {
@@ -273,10 +299,6 @@ public class BackgroundMode extends CordovaPlugin {
         isBind = true;
     }
 
-    /**
-     * Bind the activity to a background service and put them into foreground
-     * state.
-     */
     private void stopService()
     {
         Activity context = cordova.getActivity();
