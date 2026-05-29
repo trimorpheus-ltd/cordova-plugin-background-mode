@@ -166,7 +166,7 @@ public class ForegroundService extends Service {
             // The user-visible description of the channel.
             String description = settings.optString("channelDescription", "cordova-plugin-background-moden notification");
 
-            int importance = NotificationManager.IMPORTANCE_LOW;
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
 
             NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, name, importance);
 
