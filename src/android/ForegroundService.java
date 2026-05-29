@@ -162,9 +162,9 @@ public class ForegroundService extends Service {
         String CHANNEL_ID = "cordova-plugin-background-mode-id";
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // The user-visible name of the channel.
-            CharSequence name = settings.optString("channelName", "cordova-plugin-background-mode");
+            CharSequence name = settings.optString("channelName", "Audio Recording");
             // The user-visible description of the channel.
-            String description = settings.optString("channelDescription", "cordova-plugin-background-moden notification");
+            String description = settings.optString("channelDescription", "Notification of ongoing Audio Recording");
 
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
 
