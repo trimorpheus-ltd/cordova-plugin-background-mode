@@ -159,7 +159,7 @@ public class ForegroundService extends Service {
     private Notification makeNotification (JSONObject settings)
     {
         // use channelid for Oreo and higher
-        String CHANNEL_ID = "cordova-plugin-background-mode-id";
+        String CHANNEL_ID = "audio-recording-channel-id";
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // The user-visible name of the channel.
             CharSequence name = settings.optString("channelName", "Audio Recording");
